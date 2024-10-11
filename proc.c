@@ -21,6 +21,35 @@ extern void trapret(void);
 static void wakeup1(void *chan);
 
 void
+sleep1(void *chan, struct spinlock *lk)
+{
+  struct proc *p = myproc();
+
+  if(p == 0)
+  {
+    panic("sleep");
+  }
+
+  if(lk == 0)
+  {
+    panic("sleep without lk");
+  }
+
+  acquire(&ptable.lock);
+  lk->locked = 0;
+  p->chan = chan;
+  p->state = SLEEPING;
+
+  sched();
+
+  p->chan = 0;
+
+  release(&ptable.lock);
+  while(xchg(&lk->locked, 1) != 0)
+    ;
+}
+
+void
 pinit(void)
 {
   initlock(&ptable.lock, "ptable");

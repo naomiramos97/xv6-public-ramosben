@@ -1,5 +1,7 @@
 struct stat;
 struct rtcdate;
+struct spinlock;
+struct condvar;
 
 // system calls
 int fork(void);
@@ -23,6 +25,11 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+void lock(struct spinlock *);
+void unlock(struct spinlock *);
+void init_lock(struct spinlock *);
+int cv_signal(struct condvar *);
+int cv_wait(struct condvar *);
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -12,6 +12,7 @@ struct cpu {
 
 extern struct cpu cpus[NCPU];
 extern int ncpu;
+struct spinlock;
 
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
@@ -50,6 +51,8 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
 };
+
+void sleep1(void *chan, struct spinlock *lk);
 
 // Process memory is laid out contiguously, low addresses first:
 //   text
